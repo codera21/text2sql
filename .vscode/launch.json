@@ -8,7 +8,7 @@
       "name": "Launch App",
       "type": "debugpy",
       "request": "launch",
-      "program": "${workspaceFolder}/src/main.py",
+      "program": "${workspaceFolder}/src/api.py",
       "envFile": "${workspaceFolder}/.env.staging"
     }
   ]

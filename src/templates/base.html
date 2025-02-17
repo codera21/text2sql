@@ -1,72 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
-    <meta charset="UTF-8" />
-    <title>{% block title %}My Website{% endblock %}</title>
     <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
+    />
+    <!-- Include Font Awesome CSS from CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
     />
 
     <style>
-      .select,
-      .select select {
-        width: 100%;
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .is-fullheight {
+        min-height: 100vh;
+      }
+
+      /* Container for the chat area (messages + input) */
+      .chat-container {
+        display: flex;
+        flex-direction: column; /* Stack messages and input vertically */
+      }
+      /* Chat messages take 90% of the vertical space */
+      .chat-messages {
+        flex: 94%; /* Fix to 90% of container height */
+        overflow-y: auto; /* Scroll if content exceeds height */
+        padding: 1rem;
+      }
+      /* Chat input bar takes the remaining 10% */
+      .chat-input {
+        border-top: 1px solid #ddd;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        background-color: #fff;
       }
     </style>
   </head>
   <body>
-    <main>
-      <div class="container-fluid">
-        <nav class="navbar" role="navigation" aria-label="main navigation">
-          <div class="navbar-brand">
-            <a class="navbar-item" href="https://bulma.io"> Text2Sql ✈️ </a>
-          </div>
-        </nav>
-        <div class="columns">
-          <div class="column is-3">
-            <!-- Sidebar -->
-            <aside class="menu">
-              <p class="menu-label">General</p>
-              <ul class="menu-list">
-                <li><a>Dashboard</a></li>
-                <li><a>Customers</a></li>
-              </ul>
-              <p class="menu-label">Administration</p>
-              <ul class="menu-list">
-                <li><a>Team Settings</a></li>
-                <li>
-                  <a class="is-active">Manage Your Team</a>
-                  <ul>
-                    <li><a>Members</a></li>
-                    <li><a>Plugins</a></li>
-                    <li><a>Add a member</a></li>
-                  </ul>
-                </li>
-                <li><a>Invitations</a></li>
-                <li><a>Cloud Storage Environment Settings</a></li>
-                <li><a>Authentication</a></li>
-              </ul>
-              <p class="menu-label">Transactions</p>
-              <ul class="menu-list">
-                <li><a>Payments</a></li>
-                <li><a>Transfers</a></li>
-                <li><a>Balance</a></li>
-              </ul>
-            </aside>
-          </div>
-          <div class="column">
-            {% block content %}
-            <!-- Default content can go here -->
-            {% endblock %}
-          </div>
-        </div>
-      </div>
-    </main>
+    <div id="app">
+      <section class="columns is-fullheight">
+        <!-- side bar -->
+        {% include 'partials/sidebar.html' %}
 
-    <script src="https://unpkg.com/feather-icons"></script>
-    <script>
-      feather.replace();
-    </script>
+        <div class="container column is-9" id="main-area">
+          {% block content %}
+          <!-- Default content can go here -->
+          {% endblock %}
+        </div>
+      </section>
+
+      {% include "partials/footer.html" %}
+    </div>
   </body>
+
+  <script
+    src="https://unpkg.com/htmx.org@2.0.4"
+    integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+"
+    crossorigin="anonymous"
+  ></script>
 </html>

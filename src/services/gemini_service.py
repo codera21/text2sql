@@ -22,7 +22,9 @@ class GeminiService:
             1. Use ONLY column names in the schema.
             2. Use JOINs for queries across tables.
             3. Return only SQL, no explanations.
-            4. Always use backticks for table/column names (e.g., `employees`.`name`). 
+            4. Always use backticks for table/column names (e.g., `IATA_CODE` , `AIRPORT`). 
+
+            
         """
 
         response = self.client.models.generate_content(

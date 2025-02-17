@@ -1,5 +1,13 @@
-{%extends 'base.html'%} {% block content%}
-<div>
-  <h1>conversation panel</h1>
+{%extends 'base.html'%} {% block content %}
+
+<div class="chat-container is-fullheight">
+  <div class="level mt-4">
+    <div class="level-item">
+      <p class="title is-size-3">Conversation Area</p>
+    </div>
+  </div>
+  <div class="chat-messages">{%include "chat-messages.html"%}</div>
+  <div class="chat-input">{%include "chat-input.html"%}</div>
 </div>
+
 {% endblock%}
