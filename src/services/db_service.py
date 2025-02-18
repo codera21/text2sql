@@ -10,5 +10,8 @@ class DbService:
         self.airports = f"{base_file_path}/flight_delay_dataset/airports.csv"
         self.flights = f"{base_file_path}/flight_delay_dataset/flights.csv"
 
-    def execute_query(self):
+    def add_converation_history(self):
+        pass
+
+    def execute_llm_query(self):
         pass

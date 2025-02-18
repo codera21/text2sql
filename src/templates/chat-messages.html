@@ -1,9 +1,16 @@
-{% for i in range(3) %}
-<div class="card">
-  <div class="card-header">
-    <p class="card-header-title">Header</p>
+<div id="response">
+  {% for conversation in conversation_history %}
+  <div class="card">
+    <div class="card-header">
+      <p class="card-header-title">{{conversation.user_prompt}}</p>
+    </div>
+    <div class="card-content">
+      <div class="content">
+        <pre><code> {{conversation.llm_response}} </code></pre>
+      </div>
+    </div>
   </div>
-  <div class="card-content"><div class="content">Content</div></div>
+  <br />
+  {% endfor %}
 </div>
-<br />
-{% endfor %}
+ 

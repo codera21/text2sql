@@ -1,47 +1,38 @@
 <aside
-  class="column is-3  is-narrow-mobile is-fullheight section is-hidden-mobile has-background-white-bis"
+  class="column is-3 is-fullheight section has-background-white-bis"
   style="height: 100%"
 >
   <h1 class="title has-text-centered is-size-3">✈️ Text 2 SQL</h1>
   <p class="has-text-centered">
     <a class="button is-info"> New Chat</a>
   </p>
-  <p class="menu-label is-hidden-touch">Conversation History</p>
-
+  <p class="menu-label is-hidden-touch">Today</p>
   <ul class="menu-list">
+    {% for i in range(1 , 6) %} {% if i == 1 %}
     <li>
-      <a>
-        <span class="icon"><i class="fa fa-calendar"></i></span> Today
-      </a>
-
-      <ul>
-        {% for i in range(1 , 6) %} {% if i == 1 %}
-        <li>
-          <a href="#" class="has-background-info has-text-white"
-            ><i class="fa fa-message"></i> Conversation # {{i}}</a
-          >
-        </li>
-        {%else%}
-        <li>
-          <a href="#"><i class="fa fa-message"></i> Conversation # {{i}}</a>
-        </li>
-        {%endif%} {% endfor %}
-      </ul>
+      <a href="#" class="has-background-info has-text-white"
+        ><i class="fa fa-message"></i> Conversation # {{i}}</a
+      >
     </li>
-
+    {%else%}
     <li>
-      <a href="#">
-        <span class="icon"><i class="fa fa-calendar"></i></span>
-        Yesterday
-      </a>
-
-      <ul>
-        {% for i in range(1 , 6) %}
-        <li>
-          <a href="#"> <i class="fa fa-message"></i> Conversation # {{i}}</a>
-        </li>
-        {% endfor %}
-      </ul>
+      <a href="#"><i class="fa fa-message"></i> Conversation # {{i}}</a>
     </li>
+    {%endif%} {% endfor %}
+  </ul>
+
+  <p class="menu-label is-hidden-touch">Yesterday</p>
+  <ul class="menu-list">
+    {% for i in range(1 , 6) %} {% if i == 1 %}
+    <li>
+      <a href="#" class="has-background-info has-text-white"
+        ><i class="fa fa-message"></i> Conversation # {{i}}</a
+      >
+    </li>
+    {%else%}
+    <li>
+      <a href="#"><i class="fa fa-message"></i> Conversation # {{i}}</a>
+    </li>
+    {%endif%} {% endfor %}
   </ul>
 </aside>

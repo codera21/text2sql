@@ -1,6 +1,6 @@
 from pydantic import BaseModel
-from fastapi import FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, Request, Form
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 import uvicorn
 from services import GeminiService
@@ -25,15 +25,21 @@ async def get_home_page(request: Request):
     return templates.TemplateResponse("index.html", context=context)
 
 
-@app.post("/query")
-async def process_querty(user_prompt: UserPrompt):
-    # request json
-    user_prompt = user_prompt.prompt_message
+@app.post("/query", response_class=HTMLResponse)
+async def process_query(request: Request, prompt_message: str = Form(...)):
 
-    return {
-        "user_prompt": user_prompt,
-        "response_text": gemini_service.generate_sql_query_content(user_prompt),
-    }
+    conversation_history = [
+        {
+            "user_prompt": prompt_message,
+            "llm_response": """```sql SELECT * from `a21`  ```""",
+            # "llm_response": gemini_service.generate_sql_query_content(prompt_message),
+        }
+    ]
+
+    return templates.TemplateResponse(
+        "chat-messages.html",
+        context={"request": request, "conversation_history": conversation_history},
+    ).body.decode("utf-8")
 
 
 if __name__ == "__main__":
