@@ -1,22 +1,10 @@
 {%extends 'base.html'%} {% block content %}
 
-<div class="chat-container is-fullheight">
-  <div class="level mt-4">
-    <div class="level-item">
-      <p class="title is-size-3">Conversation Area</p>
-    </div>
-  </div>
+<div class="chat-container is-flex is-flex-direction-column is-fullheight">
   <div class="chat-messages">{%include "chat-messages.html"%}</div>
-  <div class="chat-input">{%include "chat-input.html"%}</div>
+  <div class="chat-input is-flex-align-items-flex-end">
+    {%include "chat-input.html"%}
+  </div>
 </div>
-
-<script>
-  document.addEventListener("htmx:afterRequest", function (event) {
-    let response = event.detail.xhr.responseText;
-    let data = JSON.parse(response);
-
-    document.getElementById("response").innerHTML = data.html;
-  });
-</script>
 
 {% endblock%}

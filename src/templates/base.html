@@ -13,37 +13,35 @@
     <style>
       html,
       body {
-        height: 100%;
         margin: 0;
         padding: 0;
       }
 
-      .is-fullheight {
-        min-height: 100vh;
-      }
-
-      /* Container for the chat area (messages + input) */
-      .chat-container {
-        display: flex;
-        flex-direction: column; /* Stack messages and input vertically */
-      }
       /* Chat messages take 90% of the vertical space */
       .chat-messages {
-        flex: 90%; /* Fix to 90% of container height */
+        min-height: 90vh;
+        max-height: 90vh;
         overflow-y: auto; /* Scroll if content exceeds height */
-        padding: 1rem;
+        padding: 0 1rem;
       }
+
       /* Chat input bar takes the remaining 10% */
       .chat-input {
+        min-height: 8vh;
+        max-height: 8vh;
         border-top: 1px solid #ddd;
         padding: 1rem;
         background-color: #fff;
       }
+
+      #app {
+        margin-bottom: 0;
+      }
     </style>
   </head>
   <body>
-    <div id="app">
-      <section class="columns is-fullheight">
+    
+      <div id="app" class="columns">
         <!-- side bar -->
         {% include 'partials/sidebar.html' %}
 
@@ -55,7 +53,7 @@
       </section>
 
       {% include "partials/footer.html" %}
-    </div>
+    
   </body>
 
   <script
