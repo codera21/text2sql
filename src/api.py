@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import uvicorn
 from services import GeminiService
@@ -26,7 +26,7 @@ async def get_home_page(request: Request):
 
 
 @app.post("/query", response_class=HTMLResponse)
-async def process_query(request: Request, prompt_message: str = Form(...)):
+async def process_query(request: Request, prompt_message=Form(...)):
 
     conversation_history = [
         {
@@ -39,7 +39,7 @@ async def process_query(request: Request, prompt_message: str = Form(...)):
     return templates.TemplateResponse(
         "chat-messages.html",
         context={"request": request, "conversation_history": conversation_history},
-    ).body.decode("utf-8")
+    )
 
 
 if __name__ == "__main__":
