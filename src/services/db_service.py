@@ -7,7 +7,7 @@ class DbService:
     def __init__(self):
         #  dataset source path
         dataset_path = Path("./dataset").resolve()
-        
+
         self.airlines = f"{dataset_path}/airlines.csv"
         self.airports = f"{dataset_path}/airports.csv"
         self.flights = f"{dataset_path}/flights.csv"
@@ -15,7 +15,7 @@ class DbService:
         self.create_tables()
 
     def connect(self):
-        return db.connect("text2sql.db")
+        return db.connect("new.db")
 
     def create_tables(self):
         # Create a sample table
@@ -138,9 +138,29 @@ class DbService:
 
     def execute_llm_sql(self, query: str):
 
-        df = db.sql(f""" SELECT * from  '{self.airlines}' """)
+        prepared_query = self._prepare_query(query)
+
+        df = db.sql(prepared_query)
 
         return df
+
+    def _prepare_query(self, query):
+        table_mapper = {
+            "`airports`": self.airports,
+            "`airlines`": self.airlines,
+            "`flights`": self.flights,
+        }
+
+        # remove unnecessary whitespace
+        query = query.strip()
+        # remove ```sql tick if any
+        query = query.replace("```sql", "")
+        query = query.replace("```", "")
+
+        for table_key, mapped_value in table_mapper.items():
+            query = query.replace(table_key, f"'{str(mapped_value)}'")
+
+        return query
 
     def get_conversation_group_detail(self, conversation_group_id: str):
         conn = self.connect()

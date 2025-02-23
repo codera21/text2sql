@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Form, Response 
+from fastapi import APIRouter, Request, Form, Response
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from services import DbService, GeminiService
@@ -38,8 +38,7 @@ async def process_query(
     request: Request, conversation_group_id=Form(...), prompt_message=Form(...)
 ):
 
-    # llm_response =   gemini_service.generate_sql_query_content(prompt_message)
-    llm_response = """SELECT * from `flights` """
+    llm_response = gemini_service.generate_suitable_sql(prompt_message)
 
     conversation_history_item = ConversationHistoryItem(
         user_prompt=prompt_message,

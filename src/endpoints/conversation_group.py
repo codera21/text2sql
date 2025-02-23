@@ -84,13 +84,12 @@ async def show_conversation_page(request: Request, conversation_group_id: str):
     )
 
     conversation_history = db_service.get_conversation_history(conversation_group_id)
-    query_exec = db_service.execute_llm_sql("select * from flights")
 
     conversation_history = [
         {
             "user_prompt": item["user_prompt"],
             "response": item["response"],
-            "query_execution": query_exec,
+            "query_execution": db_service.execute_llm_sql(item["response"]),
         }
         for item in conversation_history
     ]

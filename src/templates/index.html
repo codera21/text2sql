@@ -1,5 +1,17 @@
 {%extends 'base.html'%} {% block content %}
 
+<style>
+  /* Initially hide the loading message */
+  .htmx-indicator {
+    display: none;
+  }
+
+  /* Show the loading message when a request is in progress */
+  .htmx-request .htmx-indicator {
+    display: inline;
+  }
+</style>
+
 <div class="chat-container is-flex is-flex-direction-column is-fullheight">
   {% include 'partials/edit-delete-conversation-group.html'%}
   <div class="chat-messages">{%include "partials/chat-messages.html"%}</div>
@@ -8,5 +20,7 @@
   </div>
 </div>
 
+<!-- Loading message element -->
+<span id="loading-message" class="htmx-indicator">Loading...</span>
 
 {% endblock%}

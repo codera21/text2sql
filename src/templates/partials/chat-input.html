@@ -1,4 +1,9 @@
-<form hx-post="/query" hx-target=".chat-messages" , hx-swap="beforeend">
+<form
+  hx-post="/query"
+  hx-target=".chat-messages"
+  hx-indicator="#loading-message"
+  hx-swap="beforeend"
+>
   <div class="field has-addons">
     <div class="control is-expanded">
       <input
