@@ -85,7 +85,8 @@ class GeminiService:
             - Handle airport codes vs city names properly
             - Use the state code eg. Minnesota = 'MN'
             - Return only the SQL query, no explainations, nothing else.
-            - Always use backticks for table names. e.g. `airports` , 
+            - Always use backticks for table names. e.g. `airports` 
+            - when users explitiy states the name of airlines or airports, to use like queries e.g.  where f.AIRLINE like '%United%' 
 
         """
 

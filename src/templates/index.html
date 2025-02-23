@@ -4,11 +4,13 @@
   /* Initially hide the loading message */
   .htmx-indicator {
     display: none;
+    transition: opacity 500ms ease-in;
   }
-
-  /* Show the loading message when a request is in progress */
   .htmx-request .htmx-indicator {
-    display: inline;
+    display: block;
+  }
+  .htmx-request.htmx-indicator {
+    display: block;
   }
 </style>
 
@@ -16,11 +18,14 @@
   {% include 'partials/edit-delete-conversation-group.html'%}
   <div class="chat-messages">{%include "partials/chat-messages.html"%}</div>
   <div class="chat-input is-flex-align-items-flex-end">
+    <!-- Loading Section-->
+    <div id="loading-message" class="htmx-indicator card my-4">
+      <div class="card-content">
+        <i class="fa fa-hourglass-half"></i> Loading
+      </div>
+    </div>
     {%include "partials/chat-input.html"%}
   </div>
 </div>
-
-<!-- Loading message element -->
-<span id="loading-message" class="htmx-indicator">Loading...</span>
 
 {% endblock%}
