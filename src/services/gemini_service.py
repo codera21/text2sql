@@ -1,15 +1,25 @@
 from os import getenv
 from google import genai
 from google.genai import types
+import logging
+from tenacity import retry, stop_after_attempt, wait_exponential
+
+logging.basicConfig(level="INFO")
+log = logging.getLogger(__name__)
 
 
 class GeminiService:
 
     def __init__(self):
         api_key = getenv("GEMINI_API_KEY")
+        if not api_key:
+            raise EnvironmentError("GEMINI_API_KEY environment variable not set")
         self.client = genai.Client(api_key=api_key)
         self.model = getenv("GEMINI_LLM_MODEL", "gemini-2.0-flash")
 
+    @retry(
+        stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10)
+    )
     def generate_suitable_sql(self, user_prompt: str):
 
         system_instruct = """ 
@@ -94,11 +104,14 @@ class GeminiService:
 
         {user_prompt}
         """
+        try:
 
-        response = self.client.models.generate_content(
-            model=self.model,
-            config=types.GenerateContentConfig(system_instruction=system_instruct),
-            contents=[user_prompt_query],
-        )
-
-        return response.text
+            response = self.client.models.generate_content(
+                model=self.model,
+                config=types.GenerateContentConfig(system_instruction=system_instruct),
+                contents=[user_prompt_query],
+            )
+            return response.text
+        except Exception as e:
+            log.error(e, exc_info=True)
+            raise Exception(f"Unexpected Error: {e.__class__.__name__}")

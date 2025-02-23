@@ -2,13 +2,15 @@ from fastapi import APIRouter, Request, Form, Response
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from services import DbService, GeminiService
-from models import ConversationHistoryItem, GroupedConversationItem
+from models import GroupedConversationItem
+
+from os import getenv
 
 
 router = APIRouter()
 
 # impliment to store username
-username = "a21"
+username = getenv("USER", "a21")
 
 
 templates = Jinja2Templates(directory="src/templates")
@@ -19,7 +21,7 @@ db_service = DbService()
 
 
 @router.post("/new", response_class=HTMLResponse)
-async def create_new_chat(request: Request, username=Form(...)):
+async def create_new_chat(request: Request):
     grouped_conversation_item = GroupedConversationItem(username=username)
     conversation_group_item = db_service.add_new_conversation_group(
         grouped_conversation_item
@@ -39,7 +41,7 @@ async def create_new_chat(request: Request, username=Form(...)):
 
 
 @router.post("/clear", response_class=RedirectResponse)
-async def clear_chat_history(request: Request, username=Form(...)):
+async def clear_chat_history(request: Request):
 
     db_service.delete_conversation_group(username=username)
     return RedirectResponse("/", status_code=303)

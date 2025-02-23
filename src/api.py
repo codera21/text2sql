@@ -1,15 +1,11 @@
-from pydantic import BaseModel
-from fastapi import FastAPI, Request, Form
-from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
 import uvicorn
-from services import GeminiService, DbService
-from models import ConversationHistoryItem, GroupedConversationItem
+from dotenv import load_dotenv
+from fastapi import FastAPI
 from endpoints import routers
+from pathlib import Path
 
 
-class User(BaseModel):
-    username: str
+load_dotenv()
 
 
 app = FastAPI(title="text2sql ✈")

@@ -173,8 +173,8 @@ cython_debug/
 
 */**/*.csv
 
-.env.*
 
-.env
+
+.env.staging
 
 *.db

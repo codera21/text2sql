@@ -3,10 +3,11 @@ from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from services import DbService, GeminiService
 from models import ConversationHistoryItem, GroupedConversationItem
+from os import getenv
 
 router = APIRouter()
 # impliment to store username
-username = "a21"
+username = getenv("USER" , "a21")
 
 
 templates = Jinja2Templates(directory="src/templates")
@@ -38,7 +39,10 @@ async def process_query(
     request: Request, conversation_group_id=Form(...), prompt_message=Form(...)
 ):
 
-    llm_response = gemini_service.generate_suitable_sql(prompt_message)
+    try:
+        llm_response = gemini_service.generate_suitable_sql(prompt_message)
+    except Exception as e:
+        return {"message": "Something Went Wrong"}
 
     conversation_history_item = ConversationHistoryItem(
         user_prompt=prompt_message,
