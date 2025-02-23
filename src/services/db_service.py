@@ -1,3 +1,4 @@
+from pathlib import Path
 import duckdb as db
 from models import ConversationHistoryItem, GroupedConversationItem
 
@@ -5,11 +6,11 @@ from models import ConversationHistoryItem, GroupedConversationItem
 class DbService:
     def __init__(self):
         #  dataset source path
-        base_file_path = "/Users/atulnepal/Documents/a21/text2sql"
-
-        self.airlines = f"{base_file_path}/flight_delay_dataset/airlines.csv"
-        self.airports = f"{base_file_path}/flight_delay_dataset/airports.csv"
-        self.flights = f"{base_file_path}/flight_delay_dataset/flights.csv"
+        dataset_path = Path("./dataset").resolve()
+        
+        self.airlines = f"{dataset_path}/airlines.csv"
+        self.airports = f"{dataset_path}/airports.csv"
+        self.flights = f"{dataset_path}/flights.csv"
 
         self.create_tables()
 
@@ -40,10 +41,13 @@ class DbService:
                 user_prompt TEXT,
                 response TEXT,
                 username TEXT,
+                conversation_group_id TEXT,
                 created_at BIGINT
             )
         """
         )
+
+        conn.close()
 
     def add_converation_history(
         self, conversation_history_item: ConversationHistoryItem
@@ -52,7 +56,7 @@ class DbService:
 
         conn.execute(
             """
-            INSERT INTO conversation_history (id , username ,  user_prompt, response , created_at) VALUES (?, ?, ?, ?, ?)
+            INSERT INTO conversation_history (id , username ,  user_prompt, response , created_at , conversation_group_id) VALUES (?, ?, ?, ?, ?, ?)
         """,
             (
                 conversation_history_item.id,
@@ -60,15 +64,17 @@ class DbService:
                 conversation_history_item.user_prompt,
                 conversation_history_item.response,
                 conversation_history_item.created_at,
+                conversation_history_item.conversation_group_id,
             ),
         )
 
-        return True
+        conn.close()
+        return conversation_history_item
 
     def add_new_conversation_group(self, conversation_group: GroupedConversationItem):
         conn = self.connect()
 
-        rows = conn.execute(
+        conn.execute(
             """
             INSERT INTO conversation_group (conversation_group_id , username ,  conversation_group_name,  created_at) VALUES (?, ?, ?, ?)
         """,
@@ -94,6 +100,7 @@ class DbService:
             """
         ).fetchall()
 
+        conn.close()
         return [
             {
                 "conversation_group_id": row[0],
@@ -104,7 +111,7 @@ class DbService:
             for row in rows
         ]
 
-    def get_convesation_history(self, username: str):
+    def get_conversation_history(self, conversation_group_id: str):
 
         conn = self.connect()
 
@@ -112,11 +119,12 @@ class DbService:
             f"""
                 select  id, username, user_prompt, response, created_at 
                 from conversation_history 
-                where username = '{username}'
+                where conversation_group_id = '{conversation_group_id}'
                 order by created_at asc
             """
         ).fetchall()
 
+        conn.close()
         return [
             {
                 "id": row[0],
@@ -146,6 +154,7 @@ class DbService:
             """
         ).fetchone()
 
+        conn.close()
         return {
             "conversation_group_id": row[0],
             "username": row[1],
@@ -166,6 +175,7 @@ class DbService:
                 where conversation_group_id = '{conversation_group_id}'
             """
         )
+        conn.close()
 
     def delete_conversation_group(self, username: str):
 
@@ -177,6 +187,7 @@ class DbService:
                 where username = '{username}'
             """
         )
+        conn.close()
 
     def delete_conversation_by_id(self, conversation_group_id: str):
 
@@ -188,3 +199,4 @@ class DbService:
                 where conversation_group_id = '{conversation_group_id}'
             """
         )
+        conn.close()

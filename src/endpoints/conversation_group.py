@@ -83,11 +83,24 @@ async def show_conversation_page(request: Request, conversation_group_id: str):
         conversation_group_id
     )
 
+    conversation_history = db_service.get_conversation_history(conversation_group_id)
+    query_exec = db_service.execute_llm_sql("select * from flights")
+
+    conversation_history = [
+        {
+            "user_prompt": item["user_prompt"],
+            "response": item["response"],
+            "query_execution": query_exec,
+        }
+        for item in conversation_history
+    ]
+
     return templates.TemplateResponse(
         "index.html",
         context={
             "request": request,
             "conversation_group": conversation_group,
+            "conversation_history": conversation_history,
             "conversation_group_name": conversation_group_detail[
                 "conversation_group_name"
             ],
