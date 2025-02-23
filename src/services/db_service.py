@@ -1,5 +1,5 @@
 import duckdb as db
-from models import ConversationHistoryItem
+from models import ConversationHistoryItem, GroupedConversationItem
 
 
 class DbService:
@@ -19,6 +19,20 @@ class DbService:
     def create_tables(self):
         # Create a sample table
         conn = self.connect()
+
+        # conversation_group
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS conversation_group (
+                conversation_grouped_id TEXT PRIMARY KEY,
+                username TEXT,
+                conversation_grouped_name TEXT,
+                created_at BIGINT
+            )
+        """
+        )
+
+        # conversation_history
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS conversation_history (
@@ -51,6 +65,45 @@ class DbService:
 
         return True
 
+    def add_new_conversation_group(self, conversation_group: GroupedConversationItem):
+        conn = self.connect()
+
+        conn.execute(
+            """
+            INSERT INTO conversation_group (conversation_grouped_id , username ,  conversation_grouped_name,  created_at) VALUES (?, ?, ?, ?)
+        """,
+            (
+                conversation_group.conversation_grouped_id,
+                conversation_group.username,
+                conversation_group.conversation_grouped_name,
+                conversation_group.created_at,
+            ),
+        )
+
+        return True
+
+    def get_conversation_group(self, username: str):
+        conn = self.connect()
+
+        rows = conn.execute(
+            f"""
+                select  conversation_grouped_id, username, conversation_grouped_name, created_at
+                from conversation_group 
+                where username = '{username}'
+                order by created_at desc
+            """
+        ).fetchall()
+
+        return [
+            {
+                "conversation_grouped_id": row[0],
+                "username": row[1],
+                "conversation_grouped_name": row[2],
+                "created_at": row[3],
+            }
+            for row in rows
+        ]
+
     def get_convesation_history(self, username: str):
 
         conn = self.connect()
@@ -75,5 +128,32 @@ class DbService:
             for row in rows
         ]
 
-    def execute_llm_query(self):
-        pass
+    def execute_llm_sql(self, query: str):
+
+        df = db.sql(f""" SELECT * from  '{self.airlines}' """)
+
+        return df
+
+    def clear_converation_history(self, username: str):
+
+        conn = self.connect()
+        conn.execute(f"DELETE conversation_history where username='{username}'")
+
+    def get_conversation_group_detail(self, conversation_grouped_id: str):
+        conn = self.connect()
+
+        row = conn.execute(
+            f"""
+                select  conversation_grouped_id, username, conversation_grouped_name, created_at
+                from conversation_group 
+                where conversation_grouped_id = '{conversation_grouped_id}'
+                order by created_at desc
+            """
+        ).fetchone()
+
+        return {
+            "conversation_grouped_id": row[0],
+            "username": row[1],
+            "conversation_grouped_name": row[2],
+            "created_at": row[3],
+        }

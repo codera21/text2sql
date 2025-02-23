@@ -1,6 +1,7 @@
 {%extends 'base.html'%} {% block content %}
 
 <div class="chat-container is-flex is-flex-direction-column is-fullheight">
+  <h1 class="subtitle has-text-centered mt-4">{{conversation_grouped_name}}</h1>
   <div class="chat-messages">{%include "chat-messages.html"%}</div>
   <div class="chat-input is-flex-align-items-flex-end">
     {%include "chat-input.html"%}

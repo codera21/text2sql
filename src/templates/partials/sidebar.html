@@ -1,29 +1,26 @@
 <aside class="column is-3 section has-background-white-bis">
   <h1 class="title has-text-centered is-size-3">✈️ Text 2 SQL</h1>
-  <p class="has-text-centered">
-    <a class="button is-info"> New Chat</a>
-  </p>
-  <p class="menu-label is-hidden-touch">Today</p>
-  <ul class="menu-list">
-    {% for i in range(1 ,3) %} {% if i == 1 %}
-    <li>
-      <a href="#" class="has-background-info has-text-white"
-        ><i class="fa fa-message"></i> Conversation # {{i}}</a
-      >
-    </li>
-    {%else%}
-    <li>
-      <a href="#"><i class="fa fa-message"></i> Conversation # {{i}}</a>
-    </li>
-    {%endif%} {% endfor %}
-  </ul>
+  <div class="has-text-centered">
+    <form
+      id="new-chat"
+      hx-post="/conversation-group/new"
+      hx-target="#conversation_group"
+      class="is-inline"
+    >
+      <input type="hidden" name="username" value="a21" />
+      <button type="submit" class="button is-info is-light is-small">
+        <i class="fa fa-feather"></i> &nbsp;New Chat
+      </button>
+    </form>
 
-  <p class="menu-label is-hidden-touch">Yesterday</p>
-  <ul class="menu-list">
-    {% for i in range(1, 5) %}
-    <li>
-      <a href="#"><i class="fa fa-message"></i> Conversation # {{i}}</a>
-    </li>
-    {% endfor %}
-  </ul>
+    <form id="new-chat" hx-post="/clear-chat-history" class="is-inline">
+      <input type="hidden" name="username" value="a21" />
+      <button type="submit" class="button is-link is-light is-small">
+        <i class="fa fa-trash"></i> &nbsp;Clear Chat
+      </button>
+    </form>
+  </div>
+
+  <p class="menu-label is-hidden-touch">Conversation History</p>
+  {% include "partials/conversation-group.html"%}
 </aside>

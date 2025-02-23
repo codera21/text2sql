@@ -1,0 +1,9 @@
+<ul id="conversation_group" class="menu-list">
+  {% for i in conversation_group %}
+  <li>
+    <a href="/conversation-group/{{i.conversation_grouped_id}}"
+      ><i class="fa fa-message"></i> {{i.conversation_grouped_name}}
+    </a>
+  </li>
+  {% endfor %}
+</ul>
