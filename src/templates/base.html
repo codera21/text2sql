@@ -19,16 +19,14 @@
 
       /* Chat messages take 90% of the vertical space */
       .chat-messages {
-        min-height: 90vh;
-        max-height: 90vh;
+        min-height: 83vh;
+        max-height: 83vh;
         overflow-y: auto; /* Scroll if content exceeds height */
         padding: 0 1rem;
       }
 
       /* Chat input bar takes the remaining 10% */
       .chat-input {
-        min-height: 8vh;
-        max-height: 8vh;
         border-top: 1px solid #ddd;
         padding: 1rem;
         background-color: #fff;
@@ -40,20 +38,18 @@
     </style>
   </head>
   <body>
-    
-      <div id="app" class="columns">
-        <!-- side bar -->
-        {% include 'partials/sidebar.html' %}
+    <div id="app" class="columns">
+      <!-- side bar -->
+      {% include 'partials/sidebar.html' %}
 
-        <div class="container column is-9" id="main-area">
-          {% block content %}
-          <!-- Default content can go here -->
-          {% endblock %}
-        </div>
-      </section>
+      <div class="container column is-9" id="main-area">
+        {% block content %}
+        <!-- Default content can go here -->
+        {% endblock %}
+      </div>
+    </div>
 
-      {% include "partials/footer.html" %}
-    
+    {% include "partials/footer.html" %}
   </body>
 
   <script
@@ -61,4 +57,5 @@
     integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+"
     crossorigin="anonymous"
   ></script>
+  
 </html>

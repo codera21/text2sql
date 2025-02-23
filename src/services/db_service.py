@@ -24,9 +24,9 @@ class DbService:
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS conversation_group (
-                conversation_grouped_id TEXT PRIMARY KEY,
+                conversation_group_id TEXT PRIMARY KEY,
                 username TEXT,
-                conversation_grouped_name TEXT,
+                conversation_group_name TEXT,
                 created_at BIGINT
             )
         """
@@ -68,26 +68,26 @@ class DbService:
     def add_new_conversation_group(self, conversation_group: GroupedConversationItem):
         conn = self.connect()
 
-        conn.execute(
+        rows = conn.execute(
             """
-            INSERT INTO conversation_group (conversation_grouped_id , username ,  conversation_grouped_name,  created_at) VALUES (?, ?, ?, ?)
+            INSERT INTO conversation_group (conversation_group_id , username ,  conversation_group_name,  created_at) VALUES (?, ?, ?, ?)
         """,
             (
-                conversation_group.conversation_grouped_id,
+                conversation_group.conversation_group_id,
                 conversation_group.username,
-                conversation_group.conversation_grouped_name,
+                conversation_group.conversation_group_name,
                 conversation_group.created_at,
             ),
         )
 
-        return True
+        return conversation_group
 
     def get_conversation_group(self, username: str):
         conn = self.connect()
 
         rows = conn.execute(
             f"""
-                select  conversation_grouped_id, username, conversation_grouped_name, created_at
+                select  conversation_group_id, username, conversation_group_name, created_at
                 from conversation_group 
                 where username = '{username}'
                 order by created_at desc
@@ -96,9 +96,9 @@ class DbService:
 
         return [
             {
-                "conversation_grouped_id": row[0],
+                "conversation_group_id": row[0],
                 "username": row[1],
-                "conversation_grouped_name": row[2],
+                "conversation_group_name": row[2],
                 "created_at": row[3],
             }
             for row in rows
@@ -134,26 +134,57 @@ class DbService:
 
         return df
 
-    def clear_converation_history(self, username: str):
-
-        conn = self.connect()
-        conn.execute(f"DELETE conversation_history where username='{username}'")
-
-    def get_conversation_group_detail(self, conversation_grouped_id: str):
+    def get_conversation_group_detail(self, conversation_group_id: str):
         conn = self.connect()
 
         row = conn.execute(
             f"""
-                select  conversation_grouped_id, username, conversation_grouped_name, created_at
+                select  conversation_group_id, username, conversation_group_name, created_at
                 from conversation_group 
-                where conversation_grouped_id = '{conversation_grouped_id}'
+                where conversation_group_id = '{conversation_group_id}'
                 order by created_at desc
             """
         ).fetchone()
 
         return {
-            "conversation_grouped_id": row[0],
+            "conversation_group_id": row[0],
             "username": row[1],
-            "conversation_grouped_name": row[2],
+            "conversation_group_name": row[2],
             "created_at": row[3],
         }
+
+    def edit_conversation_group(
+        self, conversation_group_id: str, new_conversation_group_name: str
+    ):
+
+        conn = self.connect()
+
+        conn.execute(
+            f"""
+                update  conversation_group 
+                set   conversation_group_name= '{new_conversation_group_name}'
+                where conversation_group_id = '{conversation_group_id}'
+            """
+        )
+
+    def delete_conversation_group(self, username: str):
+
+        conn = self.connect()
+
+        conn.execute(
+            f"""
+                delete from  conversation_group 
+                where username = '{username}'
+            """
+        )
+
+    def delete_conversation_by_id(self, conversation_group_id: str):
+
+        conn = self.connect()
+
+        conn.execute(
+            f"""
+                delete from  conversation_group 
+                where conversation_group_id = '{conversation_group_id}'
+            """
+        )

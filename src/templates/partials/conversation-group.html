@@ -1,9 +1,25 @@
 <ul id="conversation_group" class="menu-list">
-  {% for i in conversation_group %}
-  <li>
-    <a href="/conversation-group/{{i.conversation_grouped_id}}"
-      ><i class="fa fa-message"></i> {{i.conversation_grouped_name}}
+  {% for i in conversation_group %} {% if i.conversation_group_id ==
+  conversation_group_id%}
+  <li class="has-background-white-ter">
+    <a href="/conversation-group/{{i.conversation_group_id}}"
+      ><i class="fa fa-message"></i> {{i.conversation_group_name}}
     </a>
   </li>
-  {% endfor %}
+  {% else %}
+  <li>
+    <a href="/conversation-group/{{i.conversation_group_id}}"
+      ><i class="fa fa-message"></i> {{i.conversation_group_name}}
+    </a>
+  </li>
+  {%endif%} {% endfor %}
 </ul>
+
+<script>
+  document.body.addEventListener("htmx:afterRequest", function (event) {
+    let redirectUrl = event.detail.xhr.getResponseHeader("HX-Redirect");
+    if (redirectUrl) {
+      window.location.href = redirectUrl;
+    }
+  });
+</script>

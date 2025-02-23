@@ -13,7 +13,12 @@
       </button>
     </form>
 
-    <form id="new-chat" hx-post="/clear-chat-history" class="is-inline">
+    <form
+      id="new-chat"
+      method="post"
+      action="/conversation-group/clear"
+      class="is-inline"
+    >
       <input type="hidden" name="username" value="a21" />
       <button type="submit" class="button is-link is-light is-small">
         <i class="fa fa-trash"></i> &nbsp;Clear Chat

@@ -1,0 +1,93 @@
+<div class="mt-4">
+  <div class="level px-4">
+    <div class="level-left">
+      <div>
+        <p class="subtitle">{{conversation_group_name}}</p>
+      </div>
+    </div>
+
+    <div class="level-right">
+      <div>
+        <a
+          id="open-edit-convo-name-btn"
+          class="button is-warning is-light is-small is-inline"
+          ><i class="fa fa-edit"></i> <small>Edit Conversation Name </small></a
+        >
+        &nbsp;
+        <a
+          hx-post="/conversation-group/{{conversation_group_id}}/delete"
+          hx-target="body"
+          hx-url-replace="true"
+          hx-trigger="click"
+          class="button is-danger is-light is-small is-inline"
+        >
+          <i class="fa fa-square-minus"></i> <small>Remove Conversation </small>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit button modal -->
+<div id="edit-convo-name-modal" class="modal">
+  <div class="modal-background"></div>
+
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Edit Chat Name</p>
+      <button
+        id="close-edit-convo-name-btn"
+        class="modal-close is-large"
+        aria-label="close"
+      ></button>
+    </header>
+    <!--form -->
+    <section class="modal-card-body">
+      <form method="post" action="/conversation-group/edit">
+        <input
+          class="input"
+          type="hidden"
+          name="conversation_group_id"
+          value="{{conversation_group_id}}"
+        />
+        <div class="field">
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              name="new_conversation_group_name"
+            />
+          </div>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <button type="submit" class="button is-link">Edit</button>
+          </div>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>
+
+<script>
+  // Get elements
+  const modal = document.getElementById("edit-convo-name-modal");
+  const openModal = document.getElementById("open-edit-convo-name-btn");
+  const closeModal = document.getElementById("close-edit-convo-name-btn");
+  const modalBackground = document.querySelector(".modal-background");
+
+  // Open modal
+  openModal.addEventListener("click", () => {
+    modal.classList.add("is-active");
+  });
+
+  // Close modal
+  [closeModal, modalBackground].forEach((element) => {
+    element.addEventListener("click", () => {
+      modal.classList.remove("is-active");
+    });
+  });
+
+  
+</script>

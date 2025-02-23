@@ -1,10 +1,12 @@
 {%extends 'base.html'%} {% block content %}
 
 <div class="chat-container is-flex is-flex-direction-column is-fullheight">
-  <h1 class="subtitle has-text-centered mt-4">{{conversation_grouped_name}}</h1>
-  <div class="chat-messages">{%include "chat-messages.html"%}</div>
+  {% include 'partials/edit-delete-conversation-group.html'%}
+  <div class="chat-messages">{%include "partials/chat-messages.html"%}</div>
   <div class="chat-input is-flex-align-items-flex-end">
-    {%include "chat-input.html"%}
+    {%include "partials/chat-input.html"%}
   </div>
 </div>
+
+
 {% endblock%}
