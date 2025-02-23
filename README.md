@@ -22,6 +22,14 @@ DuckDB is used as the database engine due to its efficiency and ease of integrat
 
 The application integrates with the Gemini LLM to generate SQL queries from user prompts. This involves sending the user prompt to the LLM and receiving the generated SQL query.
 
+### Key assumption
+
+- At the moment, there is no session so the assumption is only a user is using this locally.
+
+### Error handling
+
+- As Gemini is a third party api, I have added retry mechanim for error handling, which will exponentially retry the api.
+
 ## Demo
 
 ### Running the Application
