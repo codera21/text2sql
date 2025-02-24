@@ -35,7 +35,7 @@ The application integrates with the Gemini LLM to generate SQL queries from user
 ### Running the Application
 
 To run the application, use the following command:
-
+- download the dataset from kaggle: https://www.kaggle.com/datasets/usdot/flight-delays/data and keep the csv files in ./dataset folder 
 - use your gemini api key as shown in .env.example
 - install poetry and run the command `poetry install`
 - finally run the application via the command
