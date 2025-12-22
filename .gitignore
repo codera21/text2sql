@@ -178,3 +178,5 @@ cython_debug/
 .env.staging
 
 *.db
+
+AGENTS.md

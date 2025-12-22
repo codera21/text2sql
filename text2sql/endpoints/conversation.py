@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, Form, Response
+from fastapi import APIRouter, Request, Form
 from fastapi.responses import RedirectResponse, HTMLResponse
 from fastapi.templating import Jinja2Templates
 from services import DbService, GeminiService
@@ -7,10 +7,10 @@ from os import getenv
 
 router = APIRouter()
 # impliment to store username
-username = getenv("USER" , "a21")
+username = getenv("USER", "a21")
 
 
-templates = Jinja2Templates(directory="src/templates")
+templates = Jinja2Templates(directory="text2sql/templates")
 
 # dependencies
 gemini_service = GeminiService()
@@ -20,23 +20,29 @@ db_service = DbService()
 @router.get("/", response_class=RedirectResponse)
 async def get_latest_conversation_page(request: Request):
 
-    convo_grp = db_service.get_conversation_group(username)
+    project = db_service.get_or_create_default_project(username)
 
-    if len(convo_grp) > 0:
+    convo_grp = db_service.get_conversation_group(username, project.project_id)
+
+    if convo_grp:
         convo_grp_id = convo_grp[0]["conversation_group_id"]
     else:
-        grouped_conversation_item = GroupedConversationItem(username=username)
-        convo_grp: GroupedConversationItem = db_service.add_new_conversation_group(
-            grouped_conversation_item
+        grouped_conversation_item = GroupedConversationItem(
+            username=username, project_id=project.project_id
         )
+        convo_grp = db_service.add_new_conversation_group(grouped_conversation_item)
         convo_grp_id = convo_grp.conversation_group_id
 
-    return RedirectResponse(f"/conversation-group/{convo_grp_id}")
+    return RedirectResponse(
+        f"/conversation-group/{convo_grp_id}?project_id={project.project_id}"
+    )
 
 
 @router.post("/query", response_class=HTMLResponse)
 async def process_query(
-    request: Request, conversation_group_id=Form(...), prompt_message=Form(...)
+    request: Request,
+    conversation_group_id: str = Form(...),
+    prompt_message: str = Form(...),
 ):
 
     try:

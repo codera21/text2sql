@@ -2,13 +2,13 @@
   {% for i in conversation_group %} {% if i.conversation_group_id ==
   conversation_group_id%}
   <li class="has-background-white-ter">
-    <a href="/conversation-group/{{i.conversation_group_id}}"
+    <a href="/conversation-group/{{i.conversation_group_id}}?project_id={{project_id}}"
       ><i class="fa fa-message"></i> {{i.conversation_group_name}}
     </a>
   </li>
   {% else %}
   <li>
-    <a href="/conversation-group/{{i.conversation_group_id}}"
+    <a href="/conversation-group/{{i.conversation_group_id}}?project_id={{project_id}}"
       ><i class="fa fa-message"></i> {{i.conversation_group_name}}
     </a>
   </li>

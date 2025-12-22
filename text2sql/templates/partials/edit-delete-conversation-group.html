@@ -3,6 +3,9 @@
     <div class="level-left">
       <div>
         <p class="subtitle">{{conversation_group_name}}</p>
+        {% if project_name %}
+        <p class="is-size-7 has-text-grey">Project: {{project_name}}</p>
+        {% endif %}
       </div>
     </div>
 
@@ -19,6 +22,7 @@
           hx-target="body"
           hx-url-replace="true"
           hx-trigger="click"
+          hx-vals='{"project_id": "{{project_id}}"}'
           class="button is-danger is-light is-small is-inline"
         >
           <i class="fa fa-square-minus"></i> <small>Remove Conversation </small>
@@ -50,6 +54,7 @@
           name="conversation_group_id"
           value="{{conversation_group_id}}"
         />
+        <input class="input" type="hidden" name="project_id" value="{{project_id}}" />
         <div class="field">
           <div class="control">
             <input

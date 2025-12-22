@@ -1,0 +1,60 @@
+<aside class="column is-3 section has-background-white-bis">
+  <h1 class="title has-text-centered is-size-3">✈️ Text 2 SQL</h1>
+  <div class="has-text-centered">
+    <form method="post" action="/project/new" class="field has-addons is-inline">
+      <div class="control is-expanded">
+        <input
+          class="input is-small"
+          type="text"
+          name="project_name"
+          placeholder="New project name"
+        />
+      </div>
+      <div class="control">
+        <button type="submit" class="button is-primary is-light is-small">
+          <i class="fa fa-folder-plus"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <p class="menu-label is-hidden-touch">Projects</p>
+  <ul id="project-list" class="menu-list">
+    {% for project in projects %}
+    <li class="{% if project.project_id == active_project_id %}has-background-white-ter{% endif %}">
+      <a href="/project/{{project.project_id}}"
+        ><i class="fa fa-folder"></i> {{project.project_name}}</a
+      >
+    </li>
+    {% endfor %}
+  </ul>
+
+  <div class="has-text-centered">
+    <form
+      id="new-chat"
+      hx-post="/conversation-group/new"
+      hx-target="#conversation_group"
+      class="is-inline"
+    >
+      <input type="hidden" name="project_id" value="{{project_id}}" />
+      <button type="submit" class="button is-info is-light is-small">
+        <i class="fa fa-feather"></i> &nbsp;New Chat
+      </button>
+    </form>
+
+    <form
+      id="new-chat"
+      method="post"
+      action="/conversation-group/clear"
+      class="is-inline"
+    >
+      <input type="hidden" name="project_id" value="{{project_id}}" />
+      <button type="submit" class="button is-link is-light is-small">
+        <i class="fa fa-trash"></i> &nbsp;Clear Chat
+      </button>
+    </form>
+  </div>
+
+  <p class="menu-label is-hidden-touch">Conversation History</p>
+  {% include "partials/conversation-group.html"%}
+</aside>
