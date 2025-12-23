@@ -1,8 +1,12 @@
 from fastapi import APIRouter
-from endpoints import conversation_group, conversation, project
+from endpoints import conversation_group, conversation, project, index
 
 
 routers = APIRouter()
+
+routers.include_router(
+    index.router, prefix="", tags=["index"]
+)
 
 routers.include_router(
     conversation.router, prefix="", tags=["conversation"]

@@ -38,11 +38,16 @@
     </style>
   </head>
   <body>
+    {% set sidebar_visible = show_sidebar | default(True) %}
     <div id="app" class="columns">
-      <!-- side bar -->
+      {% if sidebar_visible %}
       {% include 'partials/sidebar.html' %}
+      {% endif %}
 
-      <div class="container column is-9" id="main-area">
+      <div
+        class="container column {% if sidebar_visible %}is-9{% else %}is-12{% endif %}"
+        id="main-area"
+      >
         {% block content %}
         <!-- Default content can go here -->
         {% endblock %}

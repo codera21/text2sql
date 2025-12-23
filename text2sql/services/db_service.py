@@ -1,17 +1,9 @@
-from pathlib import Path
 import duckdb as db
 from models import ConversationHistoryItem, GroupedConversationItem, ProjectItem
 
 
 class DbService:
     def __init__(self):
-        #  dataset source path
-        dataset_path = Path("./dataset").resolve()
-
-        self.airlines = f"{dataset_path}/airlines.csv"
-        self.airports = f"{dataset_path}/airports.csv"
-        self.flights = f"{dataset_path}/flights.csv"
-
         self.create_tables()
 
     def connect(self):
@@ -181,20 +173,11 @@ class DbService:
         return df
 
     def _prepare_query(self, query):
-        table_mapper = {
-            "`airports`": self.airports,
-            "`airlines`": self.airlines,
-            "`flights`": self.flights,
-        }
-
         # remove unnecessary whitespace
         query = query.strip()
         # remove ```sql tick if any
         query = query.replace("```sql", "")
         query = query.replace("```", "")
-
-        for table_key, mapped_value in table_mapper.items():
-            query = query.replace(table_key, f"'{str(mapped_value)}'")
 
         return query
 
@@ -398,6 +381,18 @@ class DbService:
                 where project_id = ?
             """,
             (project_id,),
+        )
+        conn.close()
+
+    def update_project_name(self, project_id: str, project_name: str):
+        conn = self.connect()
+        conn.execute(
+            """
+                update project
+                set project_name = ?
+                where project_id = ?
+            """,
+            (project_name, project_id),
         )
         conn.close()
 

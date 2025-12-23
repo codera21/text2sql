@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="box has-background-light is-shadowless">
+      <p class="is-uppercase has-text-weight-semibold has-text-grey-dark">
+        welcome
+      </p>
+      <h2 class="title is-3 mt-1">Select a project to get started</h2>
+      <p class="subtitle is-5 has-text-grey">
+        Pick an existing workspace or create a new one from the sidebar. Each project
+        keeps its own chats and SQL history so you can stay focused on a single analysis.
+      </p>
+    </div>
+    <div class="has-text-right mt-3">
+      <form method="post" action="/project/new" class="is-inline">
+        <input type="hidden" name="project_name" value="" />
+        <input type="hidden" name="redirect_home" value="true" />
+        <button type="submit" class="button is-primary">
+          <span class="icon"><i class="fa fa-folder-plus"></i></span>
+          <span>Add Project</span>
+        </button>
+      </form>
+    </div>
+
+    {% if projects %}
+    <div class="columns is-multiline mt-4">
+      {% for project in projects %}
+      <div class="column is-12-tablet is-4-desktop">
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title">
+              <span class="icon-text">
+                <span class="icon has-text-link">
+                  <i class="fa fa-folder-open"></i>
+                </span>
+                <span>{{ project.project_name }}</span>
+              </span>
+            </p>
+          </header>
+          <div class="card-content">
+            <p class="content has-text-grey">
+              Continue exploring flight data in this project or branch off with a new chat.
+            </p>
+          </div>
+          <footer class="card-footer">
+            <a
+              href="/project/{{ project.project_id }}"
+              class="card-footer-item has-text-weight-semibold"
+            >
+              Enter Project
+            </a>
+            <button
+              type="button"
+              class="card-footer-item button is-white js-open-modal"
+              data-target="rename-modal-{{ project.project_id }}"
+            >
+              <span class="icon"><i class="fa fa-pen"></i></span>
+              <span>Edit name</span>
+            </button>
+            <form
+              method="post"
+              action="/project/{{ project.project_id }}/delete"
+              class="card-footer-item p-0"
+            >
+              <button
+                type="submit"
+                class="button is-white card-footer-item has-text-danger"
+                onclick="return confirm('Delete this project and its chats?');"
+              >
+                <span class="icon"><i class="fa fa-trash"></i></span>
+                <span>Delete</span>
+              </button>
+            </form>
+          </footer>
+        </div>
+        <div class="modal" id="rename-modal-{{ project.project_id }}">
+          <div class="modal-background js-close-modal" data-target="rename-modal-{{ project.project_id }}"></div>
+          <div class="modal-card">
+            <header class="modal-card-head">
+              <p class="modal-card-title">Rename project</p>
+              <button
+                class="delete js-close-modal"
+                aria-label="close"
+                type="button"
+                data-target="rename-modal-{{ project.project_id }}"
+              ></button>
+            </header>
+            <form method="post" action="/project/{{ project.project_id }}/rename">
+              <section class="modal-card-body">
+                <div class="field">
+                  <label class="label is-small">Project name</label>
+                  <div class="control">
+                    <input
+                      class="input"
+                      type="text"
+                      name="project_name"
+                      value="{{ project.project_name }}"
+                      placeholder="New project name"
+                      required
+                    />
+                  </div>
+                </div>
+              </section>
+              <footer class="modal-card-foot is-justify-content-flex-end">
+                <button
+                  type="button"
+                  class="button js-close-modal"
+                  data-target="rename-modal-{{ project.project_id }}"
+                >
+                  Cancel
+                </button>
+                <button type="submit" class="button is-link">Save changes</button>
+              </footer>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="box has-text-centered has-background-white-ter mt-5 py-6">
+      <p class="title is-4">You don’t have any projects yet</p>
+      <p class="subtitle is-6 has-text-grey">
+        Kick off your first analysis by creating a project. You can always spin up more later.
+      </p>
+      <form method="post" action="/project/new">
+        <input type="hidden" name="project_name" value="" />
+        <button type="submit" class="button is-primary is-large is-fullwidth">
+          <span class="icon"><i class="fa fa-plus-circle"></i></span>
+          <span>Create your first project</span>
+        </button>
+      </form>
+    </div>
+    {% endif %}
+  </div>
+</section>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const closeModal = (targetId) => {
+      const modal = document.getElementById(targetId);
+      if (modal) {
+        modal.classList.remove("is-active");
+      }
+    };
+
+    document.querySelectorAll(".js-open-modal").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = button.dataset.target;
+        const modal = document.getElementById(target);
+        if (modal) {
+          modal.classList.add("is-active");
+          const input = modal.querySelector('input[name="project_name"]');
+          if (input) {
+            setTimeout(() => {
+              input.focus();
+              input.select();
+            }, 50);
+          }
+        }
+      });
+    });
+
+    document.querySelectorAll(".js-close-modal").forEach((button) => {
+      button.addEventListener("click", () => {
+        const target = button.dataset.target;
+        if (target) {
+          closeModal(target);
+        } else {
+          button.closest(".modal")?.classList.remove("is-active");
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

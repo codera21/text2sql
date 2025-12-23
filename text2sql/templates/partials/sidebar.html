@@ -1,34 +1,13 @@
 <aside class="column is-3 section has-background-white-bis">
   <h1 class="title has-text-centered is-size-3">✈️ Text 2 SQL</h1>
   <div class="has-text-centered">
-    <form method="post" action="/project/new" class="field has-addons is-inline">
-      <div class="control is-expanded">
-        <input
-          class="input is-small"
-          type="text"
-          name="project_name"
-          placeholder="New project name"
-        />
-      </div>
-      <div class="control">
-        <button type="submit" class="button is-primary is-light is-small">
-          <i class="fa fa-folder-plus"></i>
-        </button>
-      </div>
-    </form>
+    <a href="/" class="button is-primary is-light is-small is-fullwidth">
+      <span class="icon"><i class="fa fa-home"></i></span>
+      <span>Back to projects</span>
+    </a>
   </div>
 
-  <p class="menu-label is-hidden-touch">Projects</p>
-  <ul id="project-list" class="menu-list">
-    {% for project in projects %}
-    <li class="{% if project.project_id == active_project_id %}has-background-white-ter{% endif %}">
-      <a href="/project/{{project.project_id}}"
-        ><i class="fa fa-folder"></i> {{project.project_name}}</a
-      >
-    </li>
-    {% endfor %}
-  </ul>
-
+  {% if project_id %}
   <div class="has-text-centered">
     <form
       id="new-chat"
@@ -57,4 +36,9 @@
 
   <p class="menu-label is-hidden-touch">Conversation History</p>
   {% include "partials/conversation-group.html"%}
+  {% else %}
+  <div class="notification is-info is-light mt-4">
+    Select a project to enable chat controls and history.
+  </div>
+  {% endif %}
 </aside>

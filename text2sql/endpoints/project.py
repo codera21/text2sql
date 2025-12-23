@@ -13,7 +13,10 @@ db_service = DbService()
 
 
 @router.post("/new", response_class=RedirectResponse)
-async def create_project(project_name: str = Form(default="New Project")):
+async def create_project(
+    project_name: str = Form(default="New Project"),
+    redirect_home: bool = Form(default=False),
+):
     project_title = project_name.strip() if project_name else ""
     project = ProjectItem(
         username=username,
@@ -25,6 +28,9 @@ async def create_project(project_name: str = Form(default="New Project")):
         username=username, project_id=project.project_id
     )
     conversation_group = db_service.add_new_conversation_group(first_group)
+
+    if redirect_home:
+        return RedirectResponse("/", status_code=303)
 
     return RedirectResponse(
         f"/conversation-group/{conversation_group.conversation_group_id}?project_id={project.project_id}",
@@ -55,3 +61,16 @@ async def open_project(project_id: str):
         f"/conversation-group/{target_group_id}?project_id={project_id}",
         status_code=303,
     )
+
+
+@router.post("/{project_id}/delete", response_class=RedirectResponse)
+async def delete_project(project_id: str):
+    db_service.delete_project(project_id)
+    return RedirectResponse("/", status_code=303)
+
+
+@router.post("/{project_id}/rename", response_class=RedirectResponse)
+async def rename_project(project_id: str, project_name: str = Form(default="")):
+    new_name = (project_name or "").strip() or "New Project"
+    db_service.update_project_name(project_id, new_name)
+    return RedirectResponse("/", status_code=303)
